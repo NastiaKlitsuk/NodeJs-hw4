@@ -7,8 +7,10 @@ import {
   getItemById
 } from './crudHandlers';
 import { wrapAsyncAndSend, wrapAsync } from '../utils/async';
+import { createLogger } from '../utils/log';
 
 const { products, deletedProductsIds } = store;
+const logger = createLogger('productsController');
 
 export const getProducts = wrapAsyncAndSend(
   (request: Request, response: Response, next: NextFunction) =>
@@ -29,8 +31,10 @@ export function getProductsByCategory(
 }
 
 export const getProductById = wrapAsync(
-  (request: Request, response: Response, next: NextFunction) =>
-    Promise.resolve(getItemById(request, response, next, products)),
+  (request: Request, response: Response, next: NextFunction) => {
+    logger.info(`Requested product by id - ${request.params.id}`);
+    return Promise.resolve(getItemById(request, response, next, products));
+  },
 );
 
 export function createProduct(

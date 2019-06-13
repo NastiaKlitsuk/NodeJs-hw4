@@ -7,9 +7,11 @@ import {
   getItemById
 } from './crudHandlers';
 import { wrapAsyncAndSend, wrapAsync } from '../utils/async';
+import { createLogger } from '../utils/log';
 
 const categories = store.categories;
 const deletedCategoriesIds = store.deletedCategoriesIds;
+const logger = createLogger('categoriesController');
 
 export const getCategories = wrapAsyncAndSend(
   (request: Request, response: Response, next: NextFunction) =>
@@ -17,8 +19,10 @@ export const getCategories = wrapAsyncAndSend(
 );
 
 export const getCategoryById = wrapAsync(
-  (request: Request, response: Response, next: NextFunction) =>
-    Promise.resolve(getItemById(request, response, next, categories)),
+  (request: Request, response: Response, next: NextFunction) => {
+    logger.info(`Requested category by id - ${request.params.id}`);
+    return Promise.resolve(getItemById(request, response, next, categories));
+  },
 );
 
 export function createCategory(
