@@ -17,7 +17,6 @@ function asyncRouteHandler<T = any>(
       const result = await route(req, res, next);
       if (then) then(result, res);
       if (successStatusCode) res.status(successStatusCode);
-      next();
     } catch (err) {
       next(err);
     }
