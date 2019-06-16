@@ -22,7 +22,3 @@ export function findItemById<T extends Identity>(id: string, items: T[]) {
 export function findItemIndex<T extends Identity>(id: string, items: T[]) {
   return items.findIndex(item => item.id === id);
 }
-
-export function isNumber(maybeNumber: string) {
-  return  !isNaN(Number(maybeNumber));
-}

@@ -1,3 +1,5 @@
+import joi from 'joi';
+import { getOrThrow } from '../validations';
 import { Identity } from '../models/general';
 import { Request, Response, NextFunction } from 'express';
 import { findItemIndex, findItemById, getNewId } from '../utils/general.utils';
@@ -17,7 +19,6 @@ export function deleteItem<T extends Identity>(
 
   items.splice(itemToDeleteIndex, 1);
   response.sendStatus(204);
-  next();
 }
 
 export function updateItem<T extends Identity>(
@@ -25,6 +26,7 @@ export function updateItem<T extends Identity>(
   response: Response,
   next: NextFunction,
   items: T[],
+  schema: joi.SchemaLike,
 ) {
   const id = request.params.id;
   const maybeItem = findItemById(id, items);
@@ -33,11 +35,10 @@ export function updateItem<T extends Identity>(
     return response.sendStatus(404);
   }
 
-  const item = request.body;
+  const item = getOrThrow<T>(request.body, schema);
 
   Object.assign(maybeItem, item);
   response.status(200).send(item);
-  next();
 }
 
 export function createItem<T extends Identity>(
@@ -46,13 +47,12 @@ export function createItem<T extends Identity>(
   next: NextFunction,
   items: T[],
   deletedItemsIds: string[],
+  schema: joi.SchemaLike,
 ) {
-  const item = request.body;
-
+  const item = getOrThrow<T>(request.body, schema);
   item.id = getNewId(items.length, deletedItemsIds) || '';
   items.push(item);
   response.status(201).send(item);
-  next();
 }
 
 export function getItemById<T extends Identity>(

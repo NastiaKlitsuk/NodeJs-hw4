@@ -5,30 +5,22 @@ import { config } from './controllers';
 import { log } from './middlewares/log';
 import { logError } from './middlewares/logError';
 import expressWinston from 'express-winston';
-import { alignedWithColorsAndTime } from './consts/winston.consts';
+import error from './middlewares/error';
+import { createExpressWinstonOptions } from './utils/logger';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(log);
-app.use(
-  expressWinston.logger({
-    transports: [new winston.transports.Console()],
-    format: alignedWithColorsAndTime,
-  }),
-);
+app.use(expressWinston.logger(createExpressWinstonOptions()));
 
 Object.keys(config).forEach(routeName => {
   const routeConfig = config[routeName];
   app.use(routeConfig.prefix, routeConfig.router);
 });
 
-app.use(
-  expressWinston.errorLogger({
-    transports: [new winston.transports.Console()],
-    format: alignedWithColorsAndTime,
-  }),
-);
+app.use(expressWinston.errorLogger(createExpressWinstonOptions()));
+app.use(error);
 
 export { app };

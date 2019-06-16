@@ -7,7 +7,8 @@ import {
   getItemById
 } from './crudHandlers';
 import { wrapAsyncAndSend, wrapAsync } from '../utils/async';
-import { createLogger } from '../utils/log';
+import { createLogger } from '../utils/logger';
+import { categorySchema } from '../validations';
 
 const categories = store.categories;
 const deletedCategoriesIds = store.deletedCategoriesIds;
@@ -30,7 +31,14 @@ export function createCategory(
   response: Response,
   next: NextFunction,
 ) {
-  createItem(request, response, next, categories, deletedCategoriesIds);
+  createItem(
+    request,
+    response,
+    next,
+    categories,
+    deletedCategoriesIds,
+    categorySchema,
+  );
 }
 
 export function updateCategory(
@@ -38,7 +46,7 @@ export function updateCategory(
   response: Response,
   next: NextFunction,
 ) {
-  updateItem(request, response, next, categories);
+  updateItem(request, response, next, categories, categorySchema);
 }
 
 export function deleteCategory(

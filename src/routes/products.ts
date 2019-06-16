@@ -7,7 +7,8 @@ import {
   getItemById
 } from './crudHandlers';
 import { wrapAsyncAndSend, wrapAsync } from '../utils/async';
-import { createLogger } from '../utils/log';
+import { createLogger } from '../utils/logger';
+import { productSchema } from '../validations';
 
 const { products, deletedProductsIds } = store;
 const logger = createLogger('productsController');
@@ -27,7 +28,6 @@ export function getProductsByCategory(
     product => product.categoryId === categoryId,
   );
   response.status(200).send(productsByCategoryId);
-  next();
 }
 
 export const getProductById = wrapAsync(
@@ -42,7 +42,14 @@ export function createProduct(
   response: Response,
   next: NextFunction,
 ) {
-  createItem(request, response, next, products, deletedProductsIds);
+  createItem(
+    request,
+    response,
+    next,
+    products,
+    deletedProductsIds,
+    productSchema,
+  );
 }
 
 export function updateProduct(
@@ -50,7 +57,7 @@ export function updateProduct(
   response: Response,
   next: NextFunction,
 ) {
-  updateItem(request, response, next, products);
+  updateItem(request, response, next, products, productSchema);
 }
 
 export function deleteProduct(
