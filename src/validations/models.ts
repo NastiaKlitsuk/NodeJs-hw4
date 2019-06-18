@@ -12,4 +12,5 @@ export const productSchema = {
 
 export const categorySchema = {
   id: joi.string(),
+  name: joi.string(),
 };

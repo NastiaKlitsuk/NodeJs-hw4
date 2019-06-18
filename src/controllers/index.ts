@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { router as products } from './products';
 import { router as categories } from './categories';
+import { router as login } from './login';
 
 interface RouteConfig {
   prefix: string;
@@ -15,6 +16,10 @@ const config: { [routeName: string]: RouteConfig } = {
   categories: {
     prefix: '/api/categories',
     router: categories,
+  },
+  login: {
+    prefix: '/api/login',
+    router: login,
   },
 };
 

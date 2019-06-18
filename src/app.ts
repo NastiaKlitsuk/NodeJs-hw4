@@ -6,7 +6,10 @@ import { log } from './middlewares/log';
 import { logError } from './middlewares/logError';
 import expressWinston from 'express-winston';
 import error from './middlewares/error';
+import { initPassport } from './utils/passport';
 import { createExpressWinstonOptions } from './utils/logger';
+
+initPassport();
 
 const app = express();
 app.use(cors());
