@@ -1,25 +1,60 @@
-import express from 'express';
+import { store } from '../store';
+import { Response, Request, NextFunction } from 'express';
 import {
-  getCategories,
-  getCategoryById,
-  createCategory,
-  updateCategory,
-  deleteCategory
-} from '../routes/categories';
-import { authorize, authenticate } from '../middlewares/auth';
-import { UserRole } from '../models/credentials';
-import { getProductsByCategory } from '../routes/products';
-import { validateItemId } from '../middlewares/general.middleware';
-import { validateCategoryExistance } from '../middlewares/categories.middleware';
+  deleteItem,
+  updateItem,
+  createItem,
+  getItemById
+} from '../services/restService';
+import { Category } from '../models';
+import { wrapAsyncAndSend, wrapAsync } from '../utils/async';
+import { createLogger } from '../utils/logger';
+import { categorySchema } from '../validations';
 
-const router = express.Router();
+const categories = store.categories;
+const deletedCategoriesIds = store.deletedCategoriesIds;
+const logger = createLogger('categoriesController');
 
-router.post('/', authenticate(), authorize(UserRole.Admin), createCategory);
-router.get('/', getCategories);
-router.use('/:id', [validateItemId, validateCategoryExistance]);
-router.get('/:id', getCategoryById);
-router.get('/:id/products', getProductsByCategory);
-router.delete('/:id', authorize(UserRole.Admin), deleteCategory);
-router.put('/:id', authorize(UserRole.Admin), updateCategory);
+export const getCategories = wrapAsyncAndSend(
+  (request: Request, response: Response, next: NextFunction) =>
+    Promise.resolve(categories),
+);
 
-export { router };
+export const getCategoryById = wrapAsync(
+  (request: Request, response: Response, next: NextFunction) => {
+    logger.info(`Requested category by id - ${request.params.id}`);
+    return Promise.resolve(getItemById(request, response, next, categories));
+  },
+);
+
+export function createCategory(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  createItem<Category>(
+    request,
+    response,
+    next,
+    categories,
+    deletedCategoriesIds,
+    categorySchema,
+  );
+}
+
+export function updateCategory(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  updateItem<Category>(request, response, next, categories, categorySchema);
+}
+
+export function deleteCategory(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  deleteItem<Category>(request, response, next, categories);
+  deletedCategoriesIds.push(request.params.id);
+}

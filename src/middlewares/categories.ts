@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { findCategoryById } from '../utils/categories.utils';
+import { findCategoryById } from '../utils/categories';
 
 export function validateCategoryExistance(
   request: Request,

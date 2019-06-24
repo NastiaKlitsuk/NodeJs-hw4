@@ -2,7 +2,7 @@ import joi from 'joi';
 import { getOrThrow } from '../validations';
 import { Identity } from '../models/general';
 import { Request, Response, NextFunction } from 'express';
-import { findItemIndex, findItemById, getNewId } from '../utils/general.utils';
+import { findItemIndex, findItemById, getNewId } from '../utils/general';
 
 export function deleteItem<T extends Identity>(
   request: Request,

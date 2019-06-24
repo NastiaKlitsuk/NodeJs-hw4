@@ -1,5 +1,5 @@
 import winston from 'winston';
-import { alignedWithColorsAndTime } from '../consts/winston.consts';
+import { alignedWithColorsAndTime } from './winston';
 
 export const createLogger = (name: string) => {
   return winston.createLogger({

@@ -1,6 +1,6 @@
 import { Product } from '../models';
 import { Request, Response, NextFunction } from 'express';
-import { findProductById } from '../utils/products.utils';
+import { findProductById } from '../utils/products';
 
 export function validateProductExistance(
   request: Request,

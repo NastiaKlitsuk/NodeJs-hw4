@@ -1,5 +1,5 @@
 import { store } from '../store';
-import { isItemExists, findItemIndex } from './general.utils';
+import { isItemExists, findItemIndex } from './general';
 
 const categories = store.categories;
 

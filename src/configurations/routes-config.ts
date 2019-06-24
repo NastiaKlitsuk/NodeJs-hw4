@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { router as products } from './products';
-import { router as categories } from './categories';
-import { router as login } from './login';
+import { router as products } from '../routes/products';
+import { router as categories } from '../routes/categories';
+import { router as login } from '../routes/login';
 
 interface RouteConfig {
   prefix: string;

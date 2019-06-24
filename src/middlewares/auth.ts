@@ -11,7 +11,7 @@ export function authorize(...roles: UserRole[]) {
     if (!request.isAuthenticated()) response.sendStatus(401);
     const user = request.user as UserCredential;
     if (!roles.find(role => user.roles.indexOf(role) >= 0)) {
-      response.sendStatus(403);
+      return response.sendStatus(403);
     }
     next();
   };

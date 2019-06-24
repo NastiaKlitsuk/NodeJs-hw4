@@ -1,13 +1,11 @@
 import cors from 'cors';
-import winston from 'winston';
 import express from 'express';
-import { config } from './controllers';
 import { log } from './middlewares/log';
-import { logError } from './middlewares/logError';
 import expressWinston from 'express-winston';
 import error from './middlewares/error';
 import { initPassport } from './utils/passport';
 import { createExpressWinstonOptions } from './utils/logger';
+import { config } from './configurations/routes-config';
 
 initPassport();
 
